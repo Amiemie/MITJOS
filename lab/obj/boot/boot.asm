@@ -134,11 +134,11 @@ waitdisk(void)
 {
     7c6a:	55                   	push   %ebp
 
-static inline uint8_t
+static __inline uint8_t
 inb(int port)
 {
 	uint8_t data;
-	asm volatile("inb %w1,%0" : "=a" (data) : "d" (port));
+	__asm __volatile("inb %w1,%0" : "=a" (data) : "d" (port));
     7c6b:	ba f7 01 00 00       	mov    $0x1f7,%edx
     7c70:	89 e5                	mov    %esp,%ebp
     7c72:	ec                   	in     (%dx),%al
@@ -166,10 +166,10 @@ readsect(void *dst, uint32_t offset)
     7c83:	e8 e2 ff ff ff       	call   7c6a <waitdisk>
 }
 
-static inline void
+static __inline void
 outb(int port, uint8_t data)
 {
-	asm volatile("outb %0,%w1" : : "a" (data), "d" (port));
+	__asm __volatile("outb %0,%w1" : : "a" (data), "d" (port));
     7c88:	ba f2 01 00 00       	mov    $0x1f2,%edx
     7c8d:	b0 01                	mov    $0x1,%al
     7c8f:	ee                   	out    %al,(%dx)
@@ -201,10 +201,10 @@ outb(int port, uint8_t data)
     7cc4:	e8 a1 ff ff ff       	call   7c6a <waitdisk>
 }
 
-static inline void
+static __inline void
 insl(int port, void *addr, int cnt)
 {
-	asm volatile("cld\n\trepne\n\tinsl"
+	__asm __volatile("cld\n\trepne\n\tinsl"			:
     7cc9:	8b 7d 08             	mov    0x8(%ebp),%edi
     7ccc:	b9 80 00 00 00       	mov    $0x80,%ecx
     7cd1:	ba f0 01 00 00       	mov    $0x1f0,%edx
@@ -408,10 +408,10 @@ bootmain(void)
     7d6b:	ff 15 18 00 01 00    	call   *0x10018
 }
 
-static inline void
+static __inline void
 outw(int port, uint16_t data)
 {
-	asm volatile("outw %0,%w1" : : "a" (data), "d" (port));
+	__asm __volatile("outw %0,%w1" : : "a" (data), "d" (port));
     7d71:	ba 00 8a 00 00       	mov    $0x8a00,%edx
     7d76:	b8 00 8a ff ff       	mov    $0xffff8a00,%eax
     7d7b:	66 ef                	out    %ax,(%dx)
